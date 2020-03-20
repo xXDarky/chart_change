@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto</title>
+    <script type="text/javascript" src="./canvas/canvasjs.min.js"></script>
+    <script type="text/javascript" src="./jquery/jquery.min.js"></script>
+
+    <script type="text/javascript">
+            var jsonData = [
+                {
+
+                
+                
+                "name":"Frutas",
+                "list":[
+                    {
+                        "name":"Mango",
+                        "details":[
+                        { "x": "2016-6-25", "y": 15 },
+                        { "x": "2016-7-25", "y": 18 },
+                        { "x": "2016-8-25", "y": 13.58 },
+                        { "x": "2016-9-25", "y": 25.23 },
+                        { "x": "2016-10-25","y": 10 },
+
+                        ]
+                    },
+                    {
+                        "name":"Pera",
+                        "details":[
+                        { "x": "2016-6-25", "y": 8 },
+                        { "x": "2016-7-25", "y": 13.10 },
+                        { "x": "2016-8-25", "y": 22.50 },
+                        { "x": "2016-9-25", "y": 15.25 },
+                        { "x": "2016-10-25","y": 12.25 },
+
+                        ]
+                    },
+                    {
+                        "name":"Sandia",
+                        "details":[
+                        { "x": "2016-6-25", "y": 25.50 },
+                        { "x": "2016-7-25", "y": 22.40 },
+                        { "x": "2016-8-25", "y": 22.50 },
+                        { "x": "2016-9-25", "y": 20.15 },
+                        { "x": "2016-10-25","y": 18.25 },
+
+                        ]
+                    },
+
+                ],
+                },
+                {
+
+                "name":"Verduras",
+                "list":[
+                    {
+                        "name":"Zanahoria",
+                        "details":[
+                        { "x": "2016-6-25", "y": 15.30 },
+                        { "x": "2016-7-25", "y": 12.10 },
+                        { "x": "2016-8-25", "y": 14.90 },
+                        { "x": "2016-9-25", "y": 15.25 },
+                        { "x": "2016-10-25","y": 17.40 },
+
+                        ]
+                    },
+                    {
+                        "name":"Yuca",
+                        "details":[
+                        { "x": "2016-6-25", "y": 10.22 },
+                        { "x": "2016-7-25", "y": 10.14 },
+                        { "x": "2016-8-25", "y": 8.50 },
+                        { "x": "2016-9-25", "y": 25.25 },
+                        { "x": "2016-10-25","y": 23.25 },
+
+                        ]
+                    },
+                ]
+                },
+                {
+                "name":"Vegetales",
+                "list":[
+                    {
+                        "name":"Cebolla",
+                        "details":[
+                        { "x": "2016-6-25", "y": 24.25 },
+                        { "x": "2016-7-25", "y": 22.13 },
+                        { "x": "2016-8-25", "y": 18.25 },
+                        { "x": "2016-9-25", "y": 7.25 },
+                        { "x": "2016-10-25","y": 19.25 },
+
+                        ]
+                    },
+                    {
+                        "name":"Remolacha",
+                        "details":[
+                        { "x": "2016-6-25", "y": 28 },
+                        { "x": "2016-7-25", "y": 22.13 },
+                        { "x": "2016-8-25", "y": 14.10 },
+                        { "x": "2016-9-25", "y": 28.25 },
+                        { "x": "2016-10-25","y": 19.25 },
+
+                        ]
+                    }
+                ]
+                }
+                ]
+
+    
+        var dataPoints = [];
+        window.onload = function () {
+
+           var dataOptions='';
+           for (let index = 0; index < jsonData.length; index++) {
+             dataOptions+=`<option value="${index}">${jsonData[index].name}</option>`  
+           }
+           document.getElementById('dd').innerHTML+=dataOptions;
+           
+
+        /********** Canvas Options********/    
+        var chart = new CanvasJS.Chart("chartContainer",
+        {
+            axisX: {
+            valueFormatString: "D/MM",
+            intervalType: 'month',
+            interval: 1
+        },
+            data: [{
+            showInLegend: true,
+            type: 'column',
+            xValueType: "dateTime",
+            showInLegend: true,
+            name: "series1",
+            legendText: "Porcentaje de ventas en meses",
+            dataPoints: dataPoints 
+
+            }]
+        });
+    
+
+        $( ".dropdown" ).change(function() {
+            var secondData=`<option value="" disabled selected>Seleccione una opción</option>`;
+            var e = document.getElementById("dd");
+            var selected = e.options[e.selectedIndex].value;
+            for (let index = 0; index < jsonData[selected].list.length; index++) {
+      
+               secondData+=`<option value="${index}">${jsonData[selected].list[index].name}</option>`
+                
+               
+           }
+           document.getElementById('ddd').innerHTML=secondData;
+           console.log(secondData);
+           
+          });
+            $( ".secondSelect" ).change(function() {
+                var e = document.getElementById("dd");
+            var firstSelected = e.options[e.selectedIndex].value;
+
+            chart.options.data[0].dataPoints = [];
+              var e = document.getElementById("ddd");
+            var secondSelected = e.options[e.selectedIndex].value;
+              valor = jsonData[firstSelected].list[secondSelected].details;
+              console.log(valor);
+              
+              for(var i in valor) {
+                
+                var xValor = valor[i].x;
+                chart.options.data[0].dataPoints.push({x: new Date(xValor), y: valor[i].y});
+              }
+              chart.render();
+            });
+                    }
+    
+
+    </script>
+</head>
+<body>
+    <br/>
+<select class="dropdown" id="dd">
+    <option value="" disabled selected>Seleciona un producto</option>  
+</select>
+<select class="secondSelect" id="ddd">
+    <option value="" disabled selected>Selecciona una opción</option>
+</select>
+<div id="chartContainer" style="height: 360px; width: 100%;"></div>
+
+</body>
+</html> 
